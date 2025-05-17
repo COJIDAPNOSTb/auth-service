@@ -1,0 +1,55 @@
+services:
+  redis:
+    image: redis:8.0.1
+    restart: "no"
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+
+  auth-service:
+    image: auth-service:latest
+    build: .
+    restart: "no"
+    environment:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/authdb
+        SPRING_DATASOURCE_USERNAME: root
+        SPRING_DATASOURCE_PASSWORD: 123qwe
+        SPRING_DATA_REDIS_HOST: redis
+        SPRING_DATA_REDIS_PORT: 6379
+        SPRING_SECURITY_CSRF_ENABLED: false
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+
+
+
+
+  postgres:
+    image: postgres:17.5
+    restart: "no"
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123qwe
+      POSTGRES_DB: authdb
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+
+
+volumes:
+  postgres_data:

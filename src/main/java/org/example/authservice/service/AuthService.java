@@ -23,7 +23,7 @@ public class AuthService {
     private final RedisTemplate<String, String> redis;
 
     public String login(AuthRequest request) {
-        System.out.println("1");
+
 
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -31,7 +31,7 @@ public class AuthService {
                         request.getPassword()
                 )
         );
-        System.out.println("✅ Успешно прошли аутентификацию");
+
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
