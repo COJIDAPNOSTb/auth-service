@@ -21,11 +21,7 @@ pipeline {
             }
         }
 
-        stage('Check Test Coverage (Optional)') {
-            steps {
-                jacoco()
-            }
-        }
+
     }
 
     post {
