@@ -23,7 +23,7 @@ pipeline {
 
         stage('Check Test Coverage (Optional)') {
             steps {
-                //jacoco()
+                jacoco()
             }
         }
     }
