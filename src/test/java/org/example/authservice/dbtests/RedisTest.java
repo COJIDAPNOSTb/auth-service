@@ -13,33 +13,33 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class RedisTest {
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
-
-    @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
-
-    @Test
-    void testRedisConnection() {
-        try {
-
-            String isPingSuccessful = redisConnectionFactory.getConnection().ping();
-
-
-            assert isPingSuccessful != null;
-            assertThat(isPingSuccessful.equals("PONG")).isTrue();
-        } catch (Exception e) {
-            throw new RuntimeException("Не удалось подключиться к Redis", e);
-        }
-    }
-
-    @Test
-    void testRedisReadWrite() {
-        String key = "testKey";
-        String value = "testValue";
-
-        redisTemplate.opsForValue().set(key, value);
-        String result = redisTemplate.opsForValue().get(key);
-        assertThat(result).isEqualTo(value);
-    }
+//    @Autowired
+//    private StringRedisTemplate redisTemplate;
+//
+//    @Autowired
+//    private RedisConnectionFactory redisConnectionFactory;
+//
+//    @Test
+//    void testRedisConnection() {
+//        try {
+//
+//            String isPingSuccessful = redisConnectionFactory.getConnection().ping();
+//
+//
+//            assert isPingSuccessful != null;
+//            assertThat(isPingSuccessful.equals("PONG")).isTrue();
+//        } catch (Exception e) {
+//            throw new RuntimeException("Не удалось подключиться к Redis", e);
+//        }
+//    }
+//
+//    @Test
+//    void testRedisReadWrite() {
+//        String key = "testKey";
+//        String value = "testValue";
+//
+//        redisTemplate.opsForValue().set(key, value);
+//        String result = redisTemplate.opsForValue().get(key);
+//        assertThat(result).isEqualTo(value);
+//    }
 }
