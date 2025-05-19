@@ -46,4 +46,13 @@ public class AuthService {
 
         return token;
     }
+    public void logout(String token) {
+        if (!redis.hasKey(token)) {
+            throw new IllegalStateException("Token not found or already expired");
+        }
+
+        redis.delete(token);
+        System.out.println("Token removed from Redis: " + token);
+    }
+
 }
