@@ -7,11 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AuthServiceApplication {
 
     public static void main(String[] args) {
-        System.out.println("update");
         SpringApplication.run(AuthServiceApplication.class, args);
-        System.out.println("update");
-        System.out.println("update");
-        System.out.println("update");
     }
 
 }
