@@ -33,9 +33,12 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/test/2").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
+                        //.anyRequest().permitAll()
                 )
-                .httpBasic(AbstractHttpConfigurer::disable)    // ← отключаем Basic
+
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

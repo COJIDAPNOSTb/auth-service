@@ -1,5 +1,6 @@
 package org.example.authservice.controller;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.authservice.model.User;
@@ -23,6 +24,7 @@ public class AuthController {
 
     private final UserService userService;
     private final AuthService authService;
+    private final MeterRegistry meterRegistry;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegisterRequest request) {
@@ -42,11 +44,21 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
         try {
-            System.out.println("11");
             String token = authService.login(request);
-            System.out.println("12");
+
+            meterRegistry.counter("auth_service_login_attempts",
+                            "result", "success",
+                            "method", "POST",
+                            "endpoint", "/login")
+                    .increment();
+
             return ResponseEntity.ok(Map.of("token", token));
         } catch (Exception e) {
+            meterRegistry.counter("auth_service_login_attempts",
+                            "result", "fail",
+                            "method", "POST",
+                            "endpoint", "/login")
+                    .increment();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
         }
     }
@@ -61,6 +73,7 @@ public class AuthController {
         String token = authHeader.substring(7);
         authService.logout(token);
 
+        meterRegistry.counter("auth_service_logout_total").increment();
         return ResponseEntity.noContent().build();
     }
 

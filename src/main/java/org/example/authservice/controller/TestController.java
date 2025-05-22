@@ -7,9 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/test")
 public class TestController {
-@GetMapping("/1")
-public String test1()
-{
-    return "test1";
-}
+    @GetMapping("/1")
+    public String test1()
+    {
+        return "test1";
+    }
+    @GetMapping("/2")
+    public String test2()
+    {
+        return "You have admin role";
+    }
 }

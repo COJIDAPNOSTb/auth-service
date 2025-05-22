@@ -1,10 +1,12 @@
 package org.example.authservice.service;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import org.example.authservice.model.User;
 import org.example.authservice.model.dto.AuthRequest;
 import org.example.authservice.repository.UserRepository;
 import org.example.authservice.security.JwtService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +26,6 @@ public class AuthService {
 
     public String login(AuthRequest request) {
 
-
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -35,19 +36,14 @@ public class AuthService {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-
-
-
-
         String token = jwtService.generateToken(user);
-
-
         redis.opsForValue().set(token, user.getUsername(), Duration.ofHours(24));
 
         return token;
     }
     public void logout(String token) {
         if (!redis.hasKey(token)) {
+
             throw new IllegalStateException("Token not found or already expired");
         }
 
